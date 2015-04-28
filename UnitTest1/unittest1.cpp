@@ -358,7 +358,7 @@ namespace UnitTest1
 			TreeNode<char> *g = t.addChild('G');
 			TreeNode<char> *i = t.addChild('I', g);
 			TreeNode<char> *h = t.addChild('H', i);
-
+			
 			DList<TreeNode<char>*> dummy_list;
 			t.preOrderRecursive(&dummy_list);
 			Assert::IsTrue(dummy_list.count() == (unsigned)9);
@@ -367,6 +367,8 @@ namespace UnitTest1
 			DList<TreeNode<char>*> dummy_list2;
 			t.preOrderRecursive(&dummy_list2);
 
+			Assert::IsTrue(dummy_list2.count() == (unsigned)1);
+			t.clear();
 			Assert::IsTrue(dummy_list2.count() == (unsigned)1);
 
 		}
