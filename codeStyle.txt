@@ -1,0 +1,5 @@
+The following CodeStyle will be followed along the different files:
+Filenames : camelCase
+Variables : snake_case
+Classes : PascalCase
+Methods & functions : camelCase 
