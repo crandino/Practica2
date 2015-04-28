@@ -190,6 +190,49 @@ public:
 			}
 		}
 	}
+
+	void inOrderIterative(DList<TreeNode<TREEDATA>*> *list)
+	{
+		Stack<TreeNode<TREEDATA>*> stack;
+		TreeNode<TREEDATA> *node = &root;
+		stack.push(node);
+	
+		while ( node != NULL && stack.pop(node))
+		{
+			doubleNode<TreeNode<TREEDATA>*> *item = node->children.getLast();
+			if (item != NULL && !(list->isOnList(children.getFirst())))
+			{
+				unsigned int middle = children.count() / 2;
+				for (unsigned int i = 0; i < middle; i++, item = item->previous)
+				{
+					stack.push(node);
+				}
+				stack.push(node);
+				for (unsigned int i = middle; i < children.count(); i++, item = item->previous)
+				{
+					stack.push(node);
+				}
+			}
+			else
+				list->add(node);
+			//LOG("%c", node->data);
+
+
+			doubleNode<TreeNode<TREEDATA>*> *item = node->children.getLast();
+
+			if (item != NULL && !(list->isOnList(item)))
+			{
+				stack.push(node);
+				for (; item != NULL; item = item->previous)
+					stack.push(item->data);
+			}
+			else
+			{
+				list->add(node);
+				//LOG("%c", node->data);
+			}
+		}
+	}
 };
 
 #endif //__TREES_H__
