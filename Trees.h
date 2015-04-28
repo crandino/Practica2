@@ -4,6 +4,7 @@
 #include "DList.h"
 #include "Stack.h"
 #include "Globals.h"
+#include <math.h>
 
 template <class TREEDATA> 
 class TreeNode
@@ -56,7 +57,7 @@ public:
 	void preOrderRecursive(DList<TreeNode<TREEDATA>*> *list)
 	{
 		list->add(this);
-		LOG("%c", data);
+		//LOG("%c", data);
 		
 		doubleNode<TreeNode*> *item = children.getFirst();
 		for (; item != NULL; item = item->next)
@@ -75,8 +76,9 @@ public:
 
 	void inOrderRecursive(DList<TreeNode<TREEDATA>*> *list)
 	{
-		// Odd number of sons -> (x left) | (x+1 right)
-		unsigned int middle = children.count() / 2;
+		// Odd number of sons -> (x + 1  left) | (x right)
+		float middle = ceil( (float)children.count() / 2.0f );
+		middle = (unsigned int)middle;
 
 		doubleNode<TreeNode*> *item = children.getFirst();
 
@@ -173,7 +175,7 @@ public:
 		TreeNode<TREEDATA> *node = &root;
 		stack.push(node);
 
-		while ( stack.pop(node) )
+		while ( stack.pop(node) == true )
 		{
 			doubleNode<TreeNode<TREEDATA>*> *item = node->children.getLast();
 
@@ -197,34 +199,23 @@ public:
 		TreeNode<TREEDATA> *node = &root;
 		stack.push(node);
 	
-		while ( node != NULL && stack.pop(node))
+		while (stack.pop(node) == true)
 		{
-			doubleNode<TreeNode<TREEDATA>*> *item = node->children.getLast();
-			if (item != NULL && !(list->isOnList(children.getFirst())))
+			// Odd number of sons -> (x + 1  left) | (x right)
+			doubleNode<TreeNode<TREEDATA>*> *last_item = node->children.getLast();
+			doubleNode<TreeNode<TREEDATA>*> *first_item = node->children.getFirst();
+			if (last_item != NULL && list->isOnList(first_item) == false )
 			{
-				unsigned int middle = children.count() / 2;
-				for (unsigned int i = 0; i < middle; i++, item = item->previous)
+				unsigned int middle = node->children.count() / 2;
+				for (unsigned int i = 0; i < middle; i++, last_item = last_item->previous)
 				{
-					stack.push(node);
+					stack.push(last_item->data);
 				}
 				stack.push(node);
-				for (unsigned int i = middle; i < children.count(); i++, item = item->previous)
+				for (unsigned int i = middle; i < node->children.count(); i++, last_item = last_item->previous)
 				{
-					stack.push(node);
+					stack.push(last_item->data);
 				}
-			}
-			else
-				list->add(node);
-			//LOG("%c", node->data);
-
-
-			doubleNode<TreeNode<TREEDATA>*> *item = node->children.getLast();
-
-			if (item != NULL && !(list->isOnList(item)))
-			{
-				stack.push(node);
-				for (; item != NULL; item = item->previous)
-					stack.push(item->data);
 			}
 			else
 			{
